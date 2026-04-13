@@ -64,8 +64,16 @@
     .lang-btn {
       background:#444;
       font-size:13px;
-      padding:8px 14px;
-      margin-top:10px;
+      padding:10px 14px;
+      margin-top:12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      line-height: 1;
+    }
+    .flag {
+      font-size: 15px;
     }
   </style>
 </head>
@@ -91,7 +99,12 @@
       For best experience, use the bot’s Web Search and Image Search commands.
     </div>
 
-    <button onclick="switchToFarsi()" class="lang-btn">🇮🇷 Change to Farsi (فارسی)</button>
+    <button onclick="switchToFarsi()" class="lang-btn" id="langBtn">
+      <span class="flag">🟢🟢🟢</span>
+      <span class="flag">⚪️🦁⚪️</span>
+      <span class="flag">🔴🔴🔴</span>
+      Change to Farsi
+    </button>
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -100,6 +113,7 @@
     Telegram.WebApp.expand();
 
     let isFarsi = false;
+    const langBtn = document.getElementById('langBtn');
 
     function goUrl() {
       let url = document.getElementById('urlInput').value.trim();
@@ -120,7 +134,6 @@
 
     function switchToFarsi() {
       isFarsi = !isFarsi;
-      const btn = document.querySelector('.lang-btn');
       
       if (isFarsi) {
         document.querySelector('h1').textContent = '🔎 جستجوی گوگل';
@@ -129,7 +142,10 @@
         document.querySelector('button[onclick="googleSearch()"]').textContent = '🔎 جستجوی وب گوگل';
         document.querySelector('button[onclick="googleImageSearch()"]').textContent = '🖼 جستجوی تصویر گوگل';
         document.querySelector('.note').innerHTML = 'در آیفون لینک‌ها در سافاری باز می‌شوند.<br>برای تجربه بهتر از دستورات جستجوی بات استفاده کنید.';
-        btn.textContent = '🇬🇧 Change to English';
+        langBtn.innerHTML = `
+          <span class="flag">🇬🇧</span>
+          Change to English
+        `;
       } else {
         document.querySelector('h1').textContent = '🔎 Search On Google';
         document.querySelector('#urlInput').placeholder = 'URL or search';
@@ -137,7 +153,12 @@
         document.querySelector('button[onclick="googleSearch()"]').textContent = '🔎 Google Web Search';
         document.querySelector('button[onclick="googleImageSearch()"]').textContent = '🖼 Google Image Search';
         document.querySelector('.note').innerHTML = 'On iPhone, links open in Safari.<br>For best experience, use the bot’s Web Search and Image Search commands.';
-        btn.textContent = '🟢⚪️🦁⚪️🔴 Farsi (فارسی)';
+        langBtn.innerHTML = `
+          <span class="flag">🟢🟢🟢</span>
+          <span class="flag">⚪️🦁⚪️</span>
+          <span class="flag">🔴🔴🔴</span>
+          Change to Farsi
+        `;
       }
     }
   </script>
