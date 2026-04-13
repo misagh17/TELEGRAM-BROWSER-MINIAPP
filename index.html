@@ -3,30 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini Browser</title>
+  <title>Search On Google</title>
   <style>
-    body { margin:0; font-family: system-ui; background:#111; color:white; }
-    .toolbar { background:#222; padding:10px; display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:100; }
-    input { flex:1; padding:12px; border-radius:999px; border:none; background:#333; color:white; font-size:16px; }
-    button { padding:12px 20px; border:none; background:#00bfff; color:white; border-radius:999px; font-weight:bold; cursor:pointer; }
-    .content { padding:20px; }
-    h1 { text-align:center; margin:20px 0; font-size:24px; }
+    body { 
+      margin:0; 
+      font-family: system-ui, -apple-system, sans-serif; 
+      background:#0f0f0f; 
+      color:#eee; 
+    }
+    .toolbar { 
+      background:#1a1a1a; 
+      padding:10px; 
+      display:flex; 
+      align-items:center; 
+      gap:8px; 
+      position:sticky; 
+      top:0; 
+      z-index:100; 
+    }
+    input { 
+      flex:1; 
+      padding:12px 16px; 
+      border-radius:999px; 
+      border:none; 
+      background:#333; 
+      color:white; 
+      font-size:16px; 
+    }
+    button { 
+      padding:12px 18px; 
+      border:none; 
+      background:#0099ff; 
+      color:white; 
+      border-radius:999px; 
+      font-weight:600; 
+      cursor:pointer; 
+      white-space:nowrap; 
+    }
+    .content { 
+      padding:16px; 
+    }
+    h1 { 
+      text-align:center; 
+      margin:12px 0 20px; 
+      font-size:22px; 
+      font-weight:600; 
+    }
+    .search-box {
+      margin-bottom:14px;
+    }
+    .note { 
+      background:#222; 
+      padding:12px; 
+      border-radius:12px; 
+      font-size:13.5px; 
+      margin-top:20px; 
+      text-align:center; 
+      line-height:1.4;
+    }
+    .lang-btn {
+      background:#444;
+      font-size:13px;
+      padding:8px 14px;
+      margin-top:10px;
+    }
   </style>
 </head>
 <body>
   <div class="toolbar">
-    <button onclick="Telegram.WebApp.openLink('https://www.google.com')">🏠 Google</button>
-    <input id="urlInput" type="text" placeholder="Enter URL or search" value="https://www.google.com">
+    <button onclick="Telegram.WebApp.openLink('https://www.google.com')">🏠</button>
+    <input id="urlInput" type="text" placeholder="URL or search" value="https://www.google.com">
     <button onclick="goUrl()">Go</button>
   </div>
   
-  <h1>🌐 Mini Browser</h1>
+  <h1>🔎 Search On Google</h1>
   
   <div class="content">
-    <h2>🔎 Quick Google Search</h2>
-    <input id="searchInput" type="text" placeholder="What do you want to search on Google?" style="width:100%; padding:15px; border-radius:999px; margin-bottom:15px;">
-    <button onclick="googleSearch()" style="width:100%; margin-bottom:10px; padding:15px;">🔎 Google Web Search</button>
-    <button onclick="googleImageSearch()" style="width:100%; padding:15px;">🖼 Google Image Search</button>
+    <div class="search-box">
+      <input id="searchInput" type="text" placeholder="Search on Google..." style="width:100%; margin-bottom:10px;">
+    </div>
+    
+    <button onclick="googleSearch()" style="width:100%; margin-bottom:8px;">🔎 Google Web Search</button>
+    <button onclick="googleImageSearch()" style="width:100%;">🖼 Google Image Search</button>
+
+    <div class="note">
+      On iPhone, links open in Safari.<br>
+      For best experience, use the bot’s Web Search and Image Search commands.
+    </div>
+
+    <button onclick="switchToFarsi()" class="lang-btn">🇮🇷 Change to Farsi (فارسی)</button>
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -34,24 +99,45 @@
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
 
+    let isFarsi = false;
+
     function goUrl() {
       let url = document.getElementById('urlInput').value.trim();
       if (!url) return;
       if (!url.startsWith('http')) url = 'https://' + url;
-      Telegram.WebApp.openLink(url, { try_instant_view: true });
+      Telegram.WebApp.openLink(url);
     }
 
     function googleSearch() {
       let q = document.getElementById('searchInput').value.trim();
-      if (q) {
-        Telegram.WebApp.openLink(`https://www.google.com/search?q=${encodeURIComponent(q)}`, { try_instant_view: true });
-      }
+      if (q) Telegram.WebApp.openLink(`https://www.google.com/search?q=${encodeURIComponent(q)}`);
     }
 
     function googleImageSearch() {
       let q = document.getElementById('searchInput').value.trim();
-      if (q) {
-        Telegram.WebApp.openLink(`https://www.google.com/search?q=${encodeURIComponent(q)}&tbm=isch`, { try_instant_view: true });
+      if (q) Telegram.WebApp.openLink(`https://www.google.com/search?q=${encodeURIComponent(q)}&tbm=isch`);
+    }
+
+    function switchToFarsi() {
+      isFarsi = !isFarsi;
+      const btn = document.querySelector('.lang-btn');
+      
+      if (isFarsi) {
+        document.querySelector('h1').textContent = '🔎 جستجوی گوگل';
+        document.querySelector('#urlInput').placeholder = 'آدرس یا جستجو';
+        document.querySelector('#searchInput').placeholder = 'در گوگل جستجو کنید...';
+        document.querySelector('button[onclick="googleSearch()"]').textContent = '🔎 جستجوی وب گوگل';
+        document.querySelector('button[onclick="googleImageSearch()"]').textContent = '🖼 جستجوی تصویر گوگل';
+        document.querySelector('.note').innerHTML = 'در آیفون لینک‌ها در سافاری باز می‌شوند.<br>برای تجربه بهتر از دستورات جستجوی بات استفاده کنید.';
+        btn.textContent = '🇬🇧 Change to English';
+      } else {
+        document.querySelector('h1').textContent = '🔎 Search On Google';
+        document.querySelector('#urlInput').placeholder = 'URL or search';
+        document.querySelector('#searchInput').placeholder = 'Search on Google...';
+        document.querySelector('button[onclick="googleSearch()"]').textContent = '🔎 Google Web Search';
+        document.querySelector('button[onclick="googleImageSearch()"]').textContent = '🖼 Google Image Search';
+        document.querySelector('.note').innerHTML = 'On iPhone, links open in Safari.<br>For best experience, use the bot’s Web Search and Image Search commands.';
+        btn.textContent = '🟢⚪️🦁⚪️🔴 Farsi (فارسی)';
       }
     }
   </script>
